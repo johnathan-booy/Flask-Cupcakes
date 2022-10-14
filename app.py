@@ -1,4 +1,5 @@
 from ctypes import sizeof
+import json
 from flask import Flask, jsonify, request, render_template, redirect, flash, session
 from models import db, connect_db, Cupcake
 
@@ -41,3 +42,30 @@ def create_cupcake():
     db.session.commit()
 
     return (jsonify(cupcake=cupcake.serialize()), 201)
+
+
+@app.route('/api/cupcakes/<int:id>', methods=['PATCH'])
+def update_cupcake(id):
+    """Update a cupcake with the id passed in the URL and flavor, size, rating and image data from the body of the request."""
+
+    cupcake = Cupcake.query.get_or_404(id)
+
+    cupcake.flavor = request.json['flavor']
+    cupcake.image = request.json['image']
+    cupcake.rating = request.json['rating']
+    cupcake.size = request.json['size']
+
+    db.session.commit()
+
+    return jsonify(cupcake=cupcake.serialize())
+
+
+@app.route('/api/cupcakes/<int:id>', methods=['DELETE'])
+def delete_cupcake(id):
+    """Delete cupcake with the id passed in the url"""
+
+    cupcake = Cupcake.query.get_or_404(id)
+    db.session.delete(cupcake)
+    db.session.commit()
+
+    return jsonify(message="Deleted")
