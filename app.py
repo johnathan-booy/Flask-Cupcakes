@@ -13,7 +13,7 @@ connect_db(app)
 
 
 @app.route('/api/cupcakes')
-def get_all_cupcakes():
+def list_cupcakes():
     """Get data about all cupcakes"""
     cupcakes = Cupcake.query.all()
     serialized = [cupcake.serialize() for cupcake in cupcakes]
