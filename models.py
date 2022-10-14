@@ -8,8 +8,6 @@ def connect_db(app):
     db.init_app(app)
     app.app_context().push()
 
-# MODELS GO HER
-
 
 class Cupcake(db.Model):
     """Cupcake Model
@@ -27,3 +25,8 @@ class Cupcake(db.Model):
     rating = db.Column(db.Float, nullable=False)
     image = db.Column(db.Text, nullable=False,
                       default='https://tinyurl.com/demo-cupcake')
+
+    def serialize(self):
+        """Serialize a cupcake model to dictionary"""
+        c = self
+        return {"id": c.id, "flavor": c.flavor, "size": c.size, "rating": c.rating, "image": c.image}
