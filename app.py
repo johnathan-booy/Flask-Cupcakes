@@ -12,6 +12,13 @@ app.config['SQLALCHEMY_ECHO'] = True
 connect_db(app)
 
 
+@app.route('/')
+def show_homepage():
+    """Show static homepage"""
+    cupcakes = Cupcake.query.all()
+    return render_template('index.html', cupcakes=cupcakes)
+
+
 @app.route('/api/cupcakes')
 def list_cupcakes():
     """Get data about all cupcakes"""
@@ -33,7 +40,7 @@ def create_cupcake():
     """Create a cupcake with flavor, size, rating and image data from the body of the request."""
 
     flavor = request.json['flavor']
-    image = request.json['image']
+    image = request.json.get('image')
     rating = request.json['rating']
     size = request.json['size']
 
@@ -51,7 +58,7 @@ def update_cupcake(id):
     cupcake = Cupcake.query.get_or_404(id)
 
     cupcake.flavor = request.json['flavor']
-    cupcake.image = request.json['image']
+    cupcake.image = request.json.get('image', cupcake.image)
     cupcake.rating = request.json['rating']
     cupcake.size = request.json['size']
 
